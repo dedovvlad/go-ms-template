@@ -13,10 +13,6 @@ import (
 )
 
 func main() {
-    if err := logger.InitLogger(version.SERVICE_NAME, "version", version.VERSION); err != nil {
-        panic(err)
-    }
-
     defer func() {
 		if err := recover(); err != nil {
 			logger.Fatal(context.Background(), err)
@@ -27,27 +23,6 @@ func main() {
     if err != nil {
         panic(err)
     }
-
-    if cfg.SentryDSN != "" {
-        err = sentry.Init(sentry.ClientOptions{
-            Dsn:              cfg.SentryDSN,
-            Environment:      cfg.Env,
-            AttachStacktrace: true,
-            Release:          version.VERSION,
-            ServerName:       version.SERVICE_NAME,
-        })
-        if err != nil {
-            panic(fmt.Errorf("sentry.Init: %s", err))
-        }
-        defer sentry.Flush(2 * time.Second)
-    }
-    tracer.Start(
-        tracer.WithEnv(cfg.Env),
-        tracer.WithService(version.SERVICE_NAME),
-        tracer.WithServiceVersion(version.VERSION),
-        tracer.WithLogger(logger.NewTraceLogger(logger.Logger())),
-    )
-    defer tracer.Stop()
 
 	swaggerSpec, err := loads.Analyzed({{ .APIPackage }}.SwaggerJSON, "")
 	if err != nil {
