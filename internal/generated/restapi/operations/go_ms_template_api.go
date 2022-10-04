@@ -19,7 +19,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"test_tmp/internal/generated/restapi/operations/test"
+	"go-ms-template/internal/generated/restapi/operations/test"
 )
 
 // NewGoMsTemplateAPI creates a new GoMsTemplate instance

@@ -22,8 +22,8 @@ import (
 	"github.com/vrischmann/envconfig"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 
-	"test_tmp/internal/generated/restapi/operations"
-	"test_tmp/internal/generated/restapi/operations/test"
+	"go-ms-template/internal/generated/restapi/operations"
+	"go-ms-template/internal/generated/restapi/operations/test"
 
 	"github.com/dedovvlad/go-ms-template/internal/app"
 	"github.com/dedovvlad/go-ms-template/internal/generated/restapi/healthcheck"

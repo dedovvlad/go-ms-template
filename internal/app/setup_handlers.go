@@ -3,7 +3,7 @@
 package app
 
 import (
-	apiTest "test_tmp/internal/generated/restapi/operations/test"
+	apiTest "go-ms-template/internal/generated/restapi/operations/test"
 
 	"github.com/dedovvlad/go-ms-template/internal/generated/restapi/operations"
 )

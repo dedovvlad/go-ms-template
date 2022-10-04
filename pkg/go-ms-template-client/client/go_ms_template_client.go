@@ -10,7 +10,7 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"test_tmp/pkg/go-ms-template-client/client/test"
+	"go-ms-template/pkg/go-ms-template-client/client/test"
 )
 
 // Default go ms template HTTP client.
