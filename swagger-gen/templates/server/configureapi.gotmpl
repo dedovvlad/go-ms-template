@@ -161,18 +161,17 @@ func configureAPI(api *{{.APIPackageAlias}}.{{ pascalize .Name }}API) http.Handl
       panic(err)
   }
   return setupCustomRoutes(
-          srv,
-          setupGlobalMiddleware(
-            metricsMiddleware(
-                api.Context(),
-                recoverMiddleware(
-                    api.Serve(setupMiddlewares),
-                    ),
-                ),
+            srv,
+            setupGlobalMiddleware(
+              metricsMiddleware(
+                  api.Context(),
+                  recoverMiddleware(
+                      api.Serve(setupMiddlewares),
+                  ),
+              ),
             ),
-          ),
-  )
-}
+    )
+  }
 
 type ResponseWriterWithHTTPCode struct {
 	wrapped http.ResponseWriter
