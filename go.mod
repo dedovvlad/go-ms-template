@@ -1,4 +1,4 @@
-module test_tmp
+module go-ms-template
 
 go 1.19
 
