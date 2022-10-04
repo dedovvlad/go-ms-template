@@ -202,22 +202,17 @@ func metricsMiddleware(ctx *middleware.Context, next http.Handler) http.Handler 
 		var handlerName string
 		respWriter := NewResponseWriterWithHTTPCode(w)
 		route, _, exists := ctx.RouteInfo(r)
-
-		defer func() {
-            if exists && route != nil && route.Operation != nil {
-                handlerName = route.Operation.ID
-            } else {
-                handlerName = formatHandlerName(r)
-            }
-
-            statReqDurations.With(prometheus.Labels{"handler": handlerName}).Observe(time.Since(ts).Seconds())
-            statReqCount.With(prometheus.Labels{
-                "code":    strconv.Itoa(respWriter.Code),
-                "method":  r.Method,
-                "handler": handlerName,
-            }).Inc()
-        }()
-
+		if exists && route != nil && route.Operation != nil {
+			handlerName = route.Operation.ID
+			defer func() {
+				statReqDurations.With(prometheus.Labels{"handler": handlerName}).Observe(time.Since(ts).Seconds())
+				statReqCount.With(prometheus.Labels{
+					"code":    strconv.Itoa(respWriter.Code),
+					"method":  r.Method,
+					"handler": handlerName,
+				}).Inc()
+			}()
+		}
 		next.ServeHTTP(respWriter, r)
 	})
 }
