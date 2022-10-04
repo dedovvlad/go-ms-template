@@ -1,3 +1,3 @@
-module github.com/dedovvlad/go-ms-template
+module github.com/dedovvlad/template
 
 go 1.19
