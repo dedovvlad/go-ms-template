@@ -166,7 +166,8 @@ func configureAPI(api *{{.APIPackageAlias}}.{{ pascalize .Name }}API) http.Handl
             metricsMiddleware(
                 api.Context(),
                 recoverMiddleware(
-                    tracerMiddleware(api.Context(), api.Serve(setupMiddlewares)),
+                    api.Serve(setupMiddlewares),
+                    ),
                 ),
             ),
           ),
@@ -316,54 +317,12 @@ func recoverMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		defer func() {
 			if r := recover(); r != nil {
-                sentry.CaptureException(fmt.Errorf("%v", r))
 				w.WriteHeader(http.StatusInternalServerError)
 			}
 		}()
 
 		next.ServeHTTP(w, req)
 	})
-}
-
-func tracerMiddleware(mctx *middleware.Context,next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sctx, err := tracer.Extract(tracer.HTTPHeadersCarrier(r.Header))
-		if err != nil {
-			next.ServeHTTP(w, r)
-			return
-		}
-		var handlerName string
-		route, _, exists := mctx.RouteInfo(r)
-        if exists && route != nil && route.Operation != nil {
-            handlerName = route.Operation.ID
-        } else {
-            handlerName = fmt.Sprintf("%s %s", r.Method, r.URL.String())
-        }
-		span := tracer.StartSpan(handlerName, tracer.ChildOf(sctx))
-		defer span.Finish()
-
-		ctx := tracer.ContextWithSpan(r.Context(), span)
-		// mesh
-		ctx = mapServiceMeshHeadersToContext(ctx, r.Header)
-		r = r.Clone(ctx)
-
-		next.ServeHTTP(w, r)
-	})
-}
-const (
-	serviceMeshHeaderPrefix = "X-Service-"
-)
-
-func mapServiceMeshHeadersToContext(ctx context.Context, headers http.Header) context.Context {
-	headersMesh := make(map[string]string)
-	for name := range headers {
-		if strings.HasPrefix(name, serviceMeshHeaderPrefix) {
-			headersMesh[strings.ToLower(name[len(serviceMeshHeaderPrefix):])] = headers.Get(name)
-		}
-	}
-	ctx = context.WithValue(ctx, "mesh", headersMesh)
-
-	return ctx
 }
 
 // The TLS configuration before HTTPS server starts.
