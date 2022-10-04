@@ -1,0 +1,28 @@
+// This file is safe to edit. Once it exists it will not be overwritten
+
+package app
+
+import (
+    "github.com/dedovvlad/{{ dasherize .Name }}/internal/generated/restapi/healthcheck"
+    "github.com/prometheus/client_golang/prometheus"
+)
+
+type Service struct {
+	metrics *prometheus.Registry
+}
+
+// New инициализирует сервис
+func New(metrics *prometheus.Registry) *Service {
+	return &Service{
+		metrics: metrics,
+	}
+}
+
+func (srv *Service) HealthCheckers() []healthcheck.Checker {
+	return nil
+}
+func (srv *Service) Metrics() prometheus.Gatherer{
+    return srv.metrics
+}
+
+func (srv *Service) OnShutdown() {}

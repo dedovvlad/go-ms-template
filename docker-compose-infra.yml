@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13.4
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: orders
+      POSTGRES_MULTIPLE_DATABASES: orders,orders_test
+    ports:
+      - 6632:5432
+    volumes:
+      - ${PWD}/build/create-multiple-postgresql-databases.sh:/docker-entrypoint-initdb.d/init.sh:rw
+      - db-data:/var/lib/postgresql/data
+
+  init:
+    build:
+      context: .
+      target: builder
+    command: |
+      sh -c '
+        ./build/wait_db.sh;
+        goose -dir database/schemas postgres "$${ORDERS_PG_DSN}" up;
+        goose -dir database/schemas postgres "$${ORDERS_PG_DSN_TEST}" up;
+        echo "migrations done";
+        testfixtures -d postgres -c "$${ORDERS_PG_DSN}" -D database/fixtures --dangerous-no-test-database-check;
+        '
+    env_file:
+      - ${PWD}/.env.compose
+    depends_on:
+      - db
+    restart: "no"
+    volumes:
+      - ${PWD}:/go/src/gitlab.com/b978/orders
+volumes:
+  db-data:
+    driver: local

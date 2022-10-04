@@ -1,0 +1,70 @@
+package main
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/dedovvlad/{{ dasherize .Name }}/internal/generated/restapi"
+	"github.com/dedovvlad/{{ dasherize .Name }}/internal/generated/restapi/operations"
+	"github.com/dedovvlad/{{ dasherize .Name }}/internal/version"
+	"github.com/dedovvlad/{{ dasherize .Name }}/internal/config"
+
+	"github.com/go-openapi/loads"
+)
+
+func main() {
+    if err := logger.InitLogger(version.SERVICE_NAME, "version", version.VERSION); err != nil {
+        panic(err)
+    }
+
+    defer func() {
+		if err := recover(); err != nil {
+			logger.Fatal(context.Background(), err)
+		}
+	}()
+
+    cfg, err := config.InitConfig(version.SERVICE_NAME)
+    if err != nil {
+        panic(err)
+    }
+
+    if cfg.SentryDSN != "" {
+        err = sentry.Init(sentry.ClientOptions{
+            Dsn:              cfg.SentryDSN,
+            Environment:      cfg.Env,
+            AttachStacktrace: true,
+            Release:          version.VERSION,
+            ServerName:       version.SERVICE_NAME,
+        })
+        if err != nil {
+            panic(fmt.Errorf("sentry.Init: %s", err))
+        }
+        defer sentry.Flush(2 * time.Second)
+    }
+    tracer.Start(
+        tracer.WithEnv(cfg.Env),
+        tracer.WithService(version.SERVICE_NAME),
+        tracer.WithServiceVersion(version.VERSION),
+        tracer.WithLogger(logger.NewTraceLogger(logger.Logger())),
+    )
+    defer tracer.Stop()
+
+	swaggerSpec, err := loads.Analyzed({{ .APIPackage }}.SwaggerJSON, "")
+	if err != nil {
+		panic(err)
+	}
+
+	api := {{ .Package }}.New{{ pascalize .Name }}API(swaggerSpec)
+	server := {{ .APIPackage }}.NewServer(api)
+
+	//nolint: errcheck
+    defer server.Shutdown()
+
+	server.ConfigureAPI()
+
+	server.Port = cfg.HTTPBindPort
+    server.GracefulTimeout = cfg.GracefulTimeout
+    if err := server.Serve(); err != nil {
+        panic(err)
+    }
+}

@@ -1,0 +1,12 @@
+package app
+
+import (
+	api{{ pascalize .Package }} "{{.GenCommon.TargetImportPath}}/{{ .RootPackage }}/operations/{{ .Package }}"
+	"github.com/go-openapi/runtime/middleware"
+	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
+)
+
+func (srv *Service){{ pascalize .Name }}Handler(params api{{ pascalize .Package }}.{{ pascalize .Name }}Params{{ if .Authorized }}, principal {{ if not ( eq .Principal "interface{}" ) }}*api{{ .Package }}.{{ .Principal }}{{else}}interface{}{{ end }}{{ end }}) middleware.Responder {
+	return middleware.NotImplemented("operation {{ .Package }} {{ pascalize .Name }} has not yet been implemented")
+}
+
