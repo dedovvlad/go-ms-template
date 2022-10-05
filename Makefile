@@ -69,7 +69,7 @@ tidy:
 deps: tidy vendor
 
 deps-client:
-	@cd ./pkg/products-client;go mod tidy
+	@cd ./pkg/${PROJECT}-client;go mod tidy
 
 ## Generating files
 gen: install-swagger clean-gen gen-clients gen-serv gen-serv-client deps
@@ -113,7 +113,7 @@ gen-serv-client:
 	@cd ./pkg/${PROJECT}-client;go mod init;go mod tidy
 
 gen-clients:
-	@echo "Generating client..."
+	@echo "Generating external client..."
 
 swagger-version:
 	@echo "${SWAGGER_PLATFORM}"
