@@ -5,7 +5,7 @@ sql:
     engine: "postgresql"
     gen:
       go:
-        package: "services"
+        package: "template"
         out: "../internal/services/template"
         emit_prepared_queries: true
         overrides:
