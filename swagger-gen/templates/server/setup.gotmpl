@@ -7,7 +7,12 @@ import (
 
 // ConfigureService конфигурирует сервис
 func (srv *Service) ConfigureService() error {
-	_, err := config.InitConfig(version.SERVICE_NAME)
+	cfg, err := config.InitConfig(version.SERVICE_NAME)
+	if err != nil {
+		return err
+	}
+
+	_, err = sql.Open("postgres", cfg.DB)
 	if err != nil {
 		return err
 	}
