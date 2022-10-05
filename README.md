@@ -1,4 +1,7 @@
-# template-backend-go
+# Service: template
 
-1. Exchange service name -> version/version.go SERVICE_NAME=
-2. Exchange go.mod module name
+## Getting started
+
+1. Execute `make init-project`, it exchange dependent names.
+2. Execute `make gen`, it create required dir.
+3. Execute `make migadd name=init`, it create first migration

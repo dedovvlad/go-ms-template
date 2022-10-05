@@ -78,7 +78,9 @@ init-project: change-version mod-init
 
 # Change version
 change-version:
-	ex -s +%s/template-backend-go/${PROJECT}/ge -cwq version/version.go
+	ex -s +%s/template/${PROJECT}/ge -cwq version/version.go
+	ex -s +%s/template/${PROJECT}/ge -cwq database/sqlc.yaml
+	ex -s +%s/template/${PROJECT}/ge -cwq README.md
 
 mod-init:
 	@go mod init ${GOPRIVATE}${PROJECT}
@@ -90,8 +92,8 @@ gen-serv:
 	@mkdir -p internal/app
 	@mkdir -p internal/config
 	@mkdir -p internal/models
-	@mkdir -p internal/processors
-	@mkdir -p internal/cesvices/${PROJECT}
+	@mkdir -p internal/processors && touch internal/processors/processor.go
+	@mkdir -p internal/services/${PROJECT} && touch internal/services//${PROJECT}/service.go
 	@${SWAGGER_BIN} generate server --allow-template-override \
 		-f ./swagger-doc/swagger.yml \
 		-t ./internal/generated -C ./swagger-gen/default-server.yml \

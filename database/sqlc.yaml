@@ -1,12 +1,12 @@
 version: "2"
 sql:
   - schema: "schemas"
-    queries: " "
+    queries: "queries.sql"
     engine: "postgresql"
     gen:
       go:
-        package: "orders"
-        out: "../internal/services/ "
+        package: template-backend-go
+        out: "../internal/services/template-backend-go"
         emit_prepared_queries: true
         overrides:
           - go_type: "string"

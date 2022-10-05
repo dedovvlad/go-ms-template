@@ -1,0 +1,2 @@
+-- name: selectTest :exec
+-- SELECT * FROM test WHERE id = $1;
