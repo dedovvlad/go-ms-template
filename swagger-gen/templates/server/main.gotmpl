@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"log"
 
-    "github.com/go-openapi/loads"
+    	"github.com/go-openapi/loads"
 
 	"github.com/dedovvlad/{{ dasherize .Name }}/internal/generated/restapi"
 	"github.com/dedovvlad/{{ dasherize .Name }}/internal/generated/restapi/operations"
 	"github.com/dedovvlad/{{ dasherize .Name }}/version"
 	"github.com/dedovvlad/{{ dasherize .Name }}/internal/config"
+	
+	_ "github.com/lib/pq"
 )
 
 func main() {
