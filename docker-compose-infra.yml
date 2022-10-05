@@ -28,8 +28,6 @@ services:
     depends_on:
       - db
     restart: "no"
-    volumes:
-      - ${PWD}:/go/src/gitlab.com/b978/orders
 volumes:
   db-data:
     driver: local
