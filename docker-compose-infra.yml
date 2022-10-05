@@ -2,26 +2,27 @@ version: '3.8'
 
 services:
   db:
+    container_name: db
     image: postgres:13.4
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
     ports:
-      - 6632:5432
+      - "5432:5432"
     volumes:
-      - ${PWD}/build/create-multiple-postgresql-databases.sh:/docker-entrypoint-initdb.d/init.sh:rw
       - db-data:/var/lib/postgresql/data
 
   init:
+    container_name: init
     build:
       context: .
-      target: builder
     command: |
       sh -c '
         ./build/wait_db.sh;
-        goose -dir database/schemas postgres "$${DATABASE_PG_DSN}" up;
-        echo "migrations done";
+              echo "migrations start...";
+        goose -dir database/schemas postgres "$${DATABASE_PG}" up;
+        echo "...migrations done";
         '
     env_file:
       - ${PWD}/.env.compose
