@@ -6,8 +6,7 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: orders
-      POSTGRES_MULTIPLE_DATABASES: orders,orders_test
+      POSTGRES_DB: postgres
     ports:
       - 6632:5432
     volumes:
@@ -21,10 +20,8 @@ services:
     command: |
       sh -c '
         ./build/wait_db.sh;
-        goose -dir database/schemas postgres "$${ORDERS_PG_DSN}" up;
-        goose -dir database/schemas postgres "$${ORDERS_PG_DSN_TEST}" up;
+        goose -dir database/schemas postgres "$${DATABASE_PG_DSN}" up;
         echo "migrations done";
-        testfixtures -d postgres -c "$${ORDERS_PG_DSN}" -D database/fixtures --dangerous-no-test-database-check;
         '
     env_file:
       - ${PWD}/.env.compose
