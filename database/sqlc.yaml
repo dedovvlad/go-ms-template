@@ -1,0 +1,15 @@
+version: "2"
+sql:
+  - schema: "schemas"
+    queries: " "
+    engine: "postgresql"
+    gen:
+      go:
+        package: "orders"
+        out: "../internal/services/ "
+        emit_prepared_queries: true
+        overrides:
+          - go_type: "string"
+            db_type: "jsonb"
+          - go_type: "string"
+            db_type: "json"
