@@ -11,10 +11,10 @@ produces:
   - application/json
 
 paths:
-  /test:
+  /template:
     get:
-      operationId: Test
-      tags: [Test]
+      operationId: template
+      tags: [template]
       responses:
         200:
           description: Successful response
