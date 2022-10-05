@@ -78,7 +78,7 @@ init-project: change-version mod-init
 
 # Change version
 change-version:
-	ex -s +%s/template/${PROJECT}/ge -cwq version/version.go
+	ex -s +%s/template-backend-go/${PROJECT}/ge -cwq version/version.go
 
 mod-init:
 	@go mod init ${GOPRIVATE}${PROJECT}
