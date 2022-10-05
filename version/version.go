@@ -2,7 +2,7 @@ package version
 
 var (
 	// nolint
-	SERVICE_NAME = "template-backend-go"
+	SERVICE_NAME = "template"
 	// nolint
 	VERSION = "unknown"
 	// nolint
