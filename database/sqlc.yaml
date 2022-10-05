@@ -5,8 +5,8 @@ sql:
     engine: "postgresql"
     gen:
       go:
-        package: template-backend-go
-        out: "../internal/services/template-backend-go"
+        package: template
+        out: "../internal/services/template"
         emit_prepared_queries: true
         overrides:
           - go_type: "string"
