@@ -182,6 +182,7 @@ infra-down:
 
 migadd: install-goose
 	#make migadd name=test
+	@mkdir -p database/schemas
 	@$(GOOSE_BIN) -dir database/schemas create $(name) sql
 
 gensql: install-sqlc
